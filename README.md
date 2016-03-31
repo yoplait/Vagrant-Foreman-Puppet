@@ -9,7 +9,7 @@ Here, what we are going to try to emulate is a complex scenario where we have di
 
 You can find me on these places:
 
-Mail: 		[https://about.me/perezpardojc](https://about.me/perezpardojc)
+Contact: 		[https://about.me/perezpardojc](https://about.me/perezpardojc)
 
 Twitter: 	[https://twitter.com/perezpardojc](https://twitter.com/perezpardojc)
 
