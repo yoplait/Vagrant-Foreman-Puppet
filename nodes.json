@@ -1,0 +1,41 @@
+{
+  "nodes": {
+    "foreman.domain": {
+      ":ip": "192.168.32.5",
+      "ports": [],
+      ":memory": 2048,
+      ":bootstrap": "bootstrap-master.sh"
+    },
+    "foreman-enc.domain": {
+      ":ip": "192.168.32.6",
+      "ports": [],
+      ":memory": 1024,
+      ":bootstrap": "bootstrap-master.sh"
+    },
+    "foreman-reports.domain": {
+      ":ip": "192.168.32.7",
+      "ports": [],
+      ":memory": 1024,
+      ":bootstrap": "bootstrap-master.sh"
+    },
+    "db.domain": {
+      ":ip": "192.168.32.8",
+      "ports": [],
+      ":memory": 1024,
+      ":bootstrap": "bootstrap-master.sh"
+    },
+    "puppetmaster-1.domain": {
+      ":ip": "192.168.32.10",
+      "ports": [],
+      ":memory": 1024,
+      ":bootstrap": "bootstrap-master.sh"
+    },
+    "puppet-ca.domain": {
+      ":ip": "192.168.32.12",
+      "ports": [],
+      ":memory": 1024,
+      ":bootstrap": "bootstrap-master.sh"
+    }
+
+  }
+}

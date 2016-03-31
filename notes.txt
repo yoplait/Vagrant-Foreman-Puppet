@@ -1,0 +1,19 @@
+You’ll need to setup the following nodes (I’ve specified IPs for example) :
+
+foreman.domain – 10.0.0.1
+
+foreman-enc.domain – 10.0.0.2
+foreman-reports.domain – 10.0.0.3
+
+foreman-db.domain – 10.0.0.4
+
+memcached.domain – 10.0.0.5
+puppetmaster-1.domain – 10.0.0.6
+puppetmaster-2.domain – 10.0.0.7
+
+puppet-ca.domain – 10.0.0.8
+
+puppet-lb.domain – 10.0.0.9
+puppet-lb-passive.domain – 10.0.0.10
+
+A virtual IP will be required for the high available load balancer : 10.0.0.11.

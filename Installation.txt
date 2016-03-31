@@ -1,0 +1,283 @@
+####################
+db.domain
+vagrant ssh db.domain 
+
+# MySQL server
+
+sudo apt-get install -yq mysql-server
+sudo netstat -tap | grep mysql
+sudo service mysql restart
+
+# cp /etc/mysql/my.cnf /etc/mysql/my.cnf.old
+# nano /etc/mysql/my.cnf 
+bind-address            = 192.168.32.8
+
+sed 's/SEARCH/REPLACE/OPTIONS' FILE.txt
+sed -i 's/find/replace/' file
+sed -i 's/^bind-address.*/bind-address            = 192.168.32.8/' /etc/mysql/my.cnf
+diff -c /etc/mysql/my.cnf /etc/mysql/my.cnf.old
+
+
+sudo service mysql restart
+change root password
+sudo dpkg-reconfigure mysql-server-5.5
+
+sudo service mysql stop
+sudo service mysql start
+
+mysql
+
+mysql -e "CREATE DATABASE foreman CHARACTER SET utf8;"
+mysql -e "CREATE USER "foreman"@"foreman.domain";"
+mysql -e "GRANT ALL PRIVILEGES ON foreman.* TO 'foreman'@'foreman.domain' IDENTIFIED BY 'foreman_password';"
+mysql -e "CREATE USER 'foreman'@'foreman-enc.wit.prod';"
+mysql -e "GRANT ALL PRIVILEGES ON foreman.* TO 'foreman'@'foreman-enc.domain' IDENTIFIED BY 'foreman_password';"
+mysql -e "CREATE USER 'foreman'@'foreman-reports.wit.prod';"
+mysql -e "GRANT ALL PRIVILEGES ON foreman.* TO 'foreman'@'foreman-reports.domain' IDENTIFIED BY 'foreman_password';"
+
+CREATE DATABASE foreman CHARACTER SET utf8;
+CREATE USER 'foreman'@'foreman.domain';
+GRANT ALL PRIVILEGES ON foreman.* TO 'foreman'@'foreman.domain' IDENTIFIED BY 'foreman_password';
+CREATE USER 'foreman'@'foreman-enc.wit.prod';
+GRANT ALL PRIVILEGES ON foreman.* TO 'foreman'@'foreman-enc.domain' IDENTIFIED BY 'foreman_password';
+CREATE USER 'foreman'@'foreman-reports.wit.prod';
+GRANT ALL PRIVILEGES ON foreman.* TO 'foreman'@'foreman-reports.domain' IDENTIFIED BY 'foreman_password';
+
+#to test connectivity
+
+ping db.domain
+mysql --host=db.domain --user=foreman --password='foreman_password' foreman
+SHOW VARIABLES LIKE "%version%";
+SHOW VARIABLES LIKE "%host%";
+
+/etc/init.d/mysql status
+status mysql
+dpkg --get-selections | grep mysql
+apt-cache show mysql
+locate mysql
+mysqladmin -u root -p status
+
+# Memcached server
+
+sudo apt-get install -yq memcached
+
+nano /etc/memcached.conf
+cp /etc/memcached.conf /etc/memcached.conf.old
+-m 128
+-l 0.0.0.0
+
+sed 's/SEARCH/REPLACE/OPTIONS' FILE.txt
+sed -i 's/find/replace/' file
+sed -i 's/^acl verizonfios.*/acl verizonfios src 4.5.6.7/' file
+sed -i 's/^-m 64.*/-m 128/' /etc/memcached.conf
+sed -i 's/^-l 127.0.0.1.*/-l 0.0.0.0/' /etc/memcached.conf
+
+sudo service memcached restart
+
+diff -c fileone filetwo
+diff -c /etc/memcached.conf /etc/memcached.conf.old
+
+# end db node 
+
+####################
+foreman.domain
+vagrant ssh foreman.domain 
+
+cat /etc/ssl/domain/certs/ca.pem
+
+sud
+/usr/bin/apt-get -q -y -o DPkg::Options::=--force-confold install foreman-mysql12
+
+sudo foreman-installer \
+--no-enable-puppet \
+--no-enable-foreman-plugin-bootdisk \
+--no-enable-foreman-proxy \
+--foreman-db-adapter=mysql2 \
+--foreman-db-database=foreman \
+--foreman-db-host=db.domain \
+--foreman-db-manage=false \
+--foreman-db-username=foreman \
+--foreman-db-password='foreman_password' \
+--foreman-db-port=3306 \
+--foreman-db-type=mysql \
+--foreman-server-ssl-ca=/etc/ssl/domain/certs/ca.pem \
+--foreman-server-ssl-chain=/etc/ssl/domain/certs/ca.pem \
+--foreman-server-ssl-cert=/etc/ssl/domain/certs/domain.pem \
+--foreman-server-ssl-key=/etc/ssl/domain/private_keys/domain.pem \
+--foreman-server-ssl-crl=/etc/ssl/domain/certs/intermediate.crl.pem
+
+
+/usr/bin/apt-get -q -y -o DPkg::Options::=--force-confold install foreman-mysql2
+apt-get -y install foreman-mysql2
+gem install activerecord-mysql-adapter
+
+sudo -u foreman /usr/bin/foreman-ruby /usr/bin/bundle install --path ./vendor/ --local --no-prune
+
+/etc/init.d/apache2 start
+sudo service apache2 restart
+sudo service apache2 status
+
+netstat -a | egrep 'Proto|LISTEN'
+
+
+/var/lib/puppet/ssl/crl.pem
+
+https://10.0.0.1/
+https://foreman.domain/
+http://foreman.domain/
+
+wget --no-check-certificate https://foreman.domain/ 
+curl -k https://foreman.domain/
+
+tracert foreman.domain
+
+
+
+Installing             Notice: /Stage[main]/Apt::Update/Exec[apt_update]: [99%] [.................................... ]s
+Installing             Done                                               [100%] [...............................]
+Success!
+
+* Foreman is running at https://foreman.domain
+Initial credentials are admin / 7wLJ96Qb9NKUixcW
+admin
+7wLJ96Qb9NKUixcW
+nXnEc4XYQs4mmnKK
+
+* Foreman Proxy is running at 
+https://foreman.domain:8443
+
+foreman-rake permissions:reset
+sudo foreman-rake permissions:reset
+sudo -u foreman foreman-rake permissions:reset
+
+sudo -u foreman gem install activerecord-sqlite3-adapter
+sudo -u foreman rake apipie:static
+
+foreman-rake console --trace
+rake test
+
+Apipie cache enabled but not present yet. Run apipie:cache rake task to speed up API calls.
+
+
+* Puppetmaster is running at port 8140
+The full log is at /var/log/foreman-installer/foreman-installer.log
+
+# memcache
+
+echo "gem 'foreman_memcache'" | sudo tee -a /usr/share/foreman/bundler.d/Gemfile.local.rb
+sudo chown foreman:foreman /usr/share/foreman/bundler.d/Gemfile.local.rb
+cd ~foreman
+sudo -u foreman bundle update foreman_memcached
+touch ~foreman/tmp/restart.txt
+
+gem install foreigner -v '1.7.4'
+
+Fetching: i18n-0.7.0.gem (100%)
+ERROR:  Error installing foreigner:
+        i18n requires Ruby version >= 1.9.3.
+
+
+bundle show foreman
+bundle show foreigner
+
+apt-get install -y ruby-rvm
+
+sudo apt-get install -y build-essential openssl libreadline6 libreadline6-dev zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev autoconf libc6-dev libncurses5-dev automake libtool bison subversion
+
+rvm install 1.9.2
+rvm install 1.9.3
+
+rvm install ruby-1.9.2-p180
+rvm install ruby-1.9.3
+
+rvm use 1.9.2 --default
+rvm use 1.9.3 --default
+
+ruby --version
+rvm --version
+
+# settings
+nano /usr/share/foreman/config/settings.plugins.d/foreman_memcache.yaml
+nano /etc/foreman/settings.yaml
+
+:memcache:
+ :hosts:
+ - db.domain:11211
+ :options:
+ :namespace: foreman
+ :expires_in: 86400
+ :compress: true
+
+#restart service
+
+sudo service apache2 restart
+
+http://foreman.domain
+admin/changeme
+
+ Go to Administer > Settings > Auth and retrieve the following settings:
+
+oauth_consumer_key
+oauth_consumer_secret
+
+MY_CONSUMER_KEY			- 
+MY_CONSUMER_SECRET		- 
+
+require_ssl_puppetmasters=false
+trusted_puppetmaster_hosts=[puppet.domain, puppet-lb.domain, puppet-lb-passive.domain]
+
+Update the following settings in Administer > Settings > Provisioning:
+
+ssl_ca_file = /etc/ssl/domain/certs/ca.pem
+ssl_certificate = /etc/ssl/domain/certs/domain.pem
+ssl_priv_key = /etc/ssl/domain/private_keys/domain.pem
+
+
+####################
+####
+Foreman ENC & Reports
+
+
+sudo foreman-installer \
+--no-enable-puppet \
+--no-enable-foreman-plugin-bootdisk \
+--no-enable-foreman-proxy \
+--foreman-db-adapter=mysql2 \
+--foreman-db-database=foreman \
+--foreman-db-host=db.domain \
+--foreman-db-manage=false \
+--foreman-db-username=foreman \
+--foreman-db-password='foreman_password' \
+--foreman-db-port=3306 \
+--foreman-db-type=mysql \
+--foreman-server-ssl-ca=/etc/ssl/domain/certs/ca.pem \
+--foreman-server-ssl-chain=/etc/ssl/domain/certs/ca.pem \
+--foreman-server-ssl-cert=/etc/ssl/domain/certs/domain.pem \
+--foreman-server-ssl-key=/etc/ssl/domain/private_keys/domain.pem \
+--foreman-server-ssl-crl=/etc/ssl/domain/certs/intermediate.crl.pem
+--foreman-oauth-consumer-key=MY_CONSUMER_KEY \
+--foreman-oauth-consumer-secret=MY_CONSUMER_SECRET
+
+echo "gem 'foreman_memcache'" | sudo tee -a /usr/share/foreman/bundler.d/Gemfile.local.rb
+sudo chown foreman:foreman /usr/share/foreman/bundler.d/Gemfile.local.rb
+cd ~foreman
+sudo -u foreman bundle update foreman_memcached
+
+Then configure it by appending the following content in /etc/foreman/settings.yaml:
+
+
+:memcache:
+ :hosts:
+ - memcached.domain:11211
+ :options:
+ :namespace: foreman
+ :expires_in: 86400
+ :compress: true
+
+sudo service apache2 restart
+
+##################
+
+
+
+####################

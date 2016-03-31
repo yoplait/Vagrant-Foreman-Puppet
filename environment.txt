@@ -1,0 +1,39 @@
+
+Original
+
+db.domain – 10.0.0.5 - 192.168.32.8 	(done)
+
+foreman.domain – 10.0.0.1 - 192.168.32.5 	(done)
+foreman-enc.domain – 10.0.0.2 - 192.168.32.6
+foreman-reports.domain – 10.0.0.3 - 192.168.32.7
+
+foreman-db.domain – 10.0.0.4 
+memcached.domain – 10.0.0.5
+
+
+
+puppetmaster-1.domain – 10.0.0.6 - 192.168.32.10
+puppetmaster-2.domain – 10.0.0.7
+
+puppet-ca.domain – 10.0.0.8 - 192.168.32.12
+
+puppet-lb.domain – 10.0.0.9
+puppet-lb-passive.domain – 10.0.0.10
+
+
+node01.domain – 10.0.0.50 - 192.168.32.50
+
+
+6 
+
+Final
+
+foreman.domain – 10.0.0.1
+foreman-enc.domain – 10.0.0.2
+foreman-reports.domain – 10.0.0.3
+
+db.domain – 10.0.0.5
+
+puppetmaster-1.domain – 10.0.0.6
+
+puppet-ca.domain – 10.0.0.8

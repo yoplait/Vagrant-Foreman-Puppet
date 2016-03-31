@@ -1,0 +1,54 @@
+#
+# 
+#
+
+host file:
+
+C:\Windows\System32\drivers\etc\hosts
+
+vagrant up
+vagrant global-status
+
+vagrant ssh foreman.domain 
+vagrant ssh foreman-enc.domain 
+vagrant ssh foreman-reports.domain 
+vagrant ssh db.domain 
+vagrant ssh puppetmaster-1.domain 
+vagrant ssh puppet-ca.domain 
+
+ping foreman.domain 
+ping foreman-enc.domain
+ping foreman-reports.do
+ping db.domain 
+ping puppetmaster-1.dom
+ping puppet-ca.domain 
+
+vagrant provision foreman.domain 
+vagrant provision foreman-enc.domain
+vagrant provision foreman-reports.do
+vagrant provision db.domain 
+vagrant provision puppetmaster-1.dom
+vagrant provision puppet-ca.domain 
+
+vagrant reload foreman.domain 
+vagrant reload foreman-enc.domain
+vagrant reload foreman-reports.do
+vagrant reload db.domain 
+vagrant reload puppetmaster-1.dom
+vagrant reload puppet-ca.domain 
+
+
+vagrant halt foreman.domain 
+vagrant halt foreman-enc.domain
+vagrant halt foreman-reports.do
+vagrant halt db.domain 
+vagrant halt puppetmaster-1.dom
+vagrant halt puppet-ca.domain 
+
+
+vagrant destroy foreman.domain
+vagrant destroy foreman-enc.domain
+vagrant destroy foreman-reports.domain
+vagrant destroy db.domain
+vagrant destroy puppetmaster-1.domain
+vagrant destroy puppet-ca.domain
